@@ -6,7 +6,7 @@ import requests
 from enum import Enum
 from types import DynamicClassAttribute
 from rest_framework.exceptions import APIException
-# from users.models import User
+from users.models import BusinessUser
 from django.conf import settings
 from PIL import Image
 from io import BytesIO
@@ -15,7 +15,7 @@ import base64
 
 config = configparser.ConfigParser()
 
-config.read('grelo_api/messages.env')
+config.read('api/messages.env')
 
 class Error(Enum):
     def __init__(self, detail: str):
@@ -40,12 +40,12 @@ class BaseAPIException(APIException):
         self.code = code
 
 
-# def email_checker(email):
-#     try:
-#         user = User.objects.get(email=email)
-#         return True
-#     except User.DoesNotExist:
-#         return False
+def email_checker(email):
+    try:
+        user = BusinessUser.objects.get(business_email=email)
+        return True
+    except BusinessUser.DoesNotExist:
+        return False
     
 
 def is_password_valid(password):
@@ -60,11 +60,17 @@ def is_email_valid(email):
     return True if match else False
 
 
-def generate_password(email):
-    conc_string = f'{email}{settings.PASSWORD_SALT}'
-    hash_password =  hashlib.sha256(conc_string.encode()).hexdigest()
-    return hash_password
-
+def check_tax_id(tax_id: str):
+    if len(tax_id) > 15:
+        return False, "Tax ID cannot be longer than 15 characters"
+    
+    if len(tax_id) < 8:
+        return False, "Tax ID must be at least 8 characters long"
+    
+    if not re.match(r'^[A-Za-z0-9]+$', tax_id):
+        return False, "Tax ID can only contain letters and numbers"
+    
+    return True, "Valid Tax ID"
 
 def generate_user_otp_token(email):
     return str(random.randint(100000, 999999))
