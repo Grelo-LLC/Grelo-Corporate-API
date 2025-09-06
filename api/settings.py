@@ -5,11 +5,13 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv(os.path.join(BASE_DIR, '.env'))
+
 SECRET_KEY = 'django-insecure-&ajhmw=vcrm%v2v$wi+ny4sro&l_pn4*ff5i8l0ewis^nwf42u'
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     "admin_interface",
@@ -20,6 +22,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users.apps.UsersConfig',
     'rest_framework',
     'rest_framework.authtoken',
     'oauth2_provider',
@@ -45,7 +48,7 @@ OAUTH2_PROVIDER_ACCESS_TOKEN_MODEL = 'oauth2_provider.AccessToken'
 OAUTH2_PROVIDER_APPLICATION_MODEL = 'oauth2_provider.Application'
 OAUTH2_PROVIDER_REFRESH_TOKEN_MODEL = 'oauth2_provider.RefreshToken'
 
-ROOT_URLCONF = 'grelo_api.urls'
+ROOT_URLCONF = 'api.urls'
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_HEADERS = [
@@ -60,6 +63,8 @@ CORS_ALLOW_HEADERS = [
     'mode',
     'rid'
 ]
+
+AUTH_USER_MODEL = 'users.BusinessUser'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -121,7 +126,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'grelo_api.wsgi.application'
+WSGI_APPLICATION = 'api.wsgi.application'
 
 
 DATABASES = {
@@ -158,10 +163,12 @@ USE_TZ = True
 
 ROOT_URL = 'http://127.0.0.1:8000'
 
+CLIENT_ID = 'IHKXU7dDXle7wH16T2ynv0MF9xTnclQ9hZ5WIzOc'
+CLIENT_SECRET = 'AlKbT0IHtoCcS4fK5VEUQ9oaURLbuBe7Alg2STF6R7PZgWedDinBPq9hMpzpzJjBMvNqVHjnM5vrFgCi0aXxWVWjOXDawPfoSapnuy2xMEUh1gAH8hEkWFSIB4iluzbd'
+
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000'
 ]
-
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
@@ -169,5 +176,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'metin.qardasov2003@gmail.com'
+EMAIL_HOST_PASSWORD = 'sufqendvvynorjmj'
+DEFAULT_FROM_EMAIL = 'metin.qardasov2003@gmail.com'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
